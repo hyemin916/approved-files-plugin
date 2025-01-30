@@ -2,21 +2,15 @@ package pe.msbaek.approvedfilesplugin
 
 import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.codeInsight.daemon.LineMarkerProvider
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiMethod
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.editor.EditorFactory
-import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.ui.awt.RelativePoint
-import java.awt.event.MouseEvent
-import java.awt.Dimension
-import javax.swing.JPanel
-import java.awt.BorderLayout
-import com.intellij.ui.components.JBScrollPane
 import com.intellij.openapi.editor.markup.GutterIconRenderer
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileEditor.OpenFileDescriptor
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiMethod
+import java.awt.event.MouseEvent
 
 class TestMethodLineMarkerProvider : LineMarkerProvider {
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
@@ -36,46 +30,40 @@ class TestMethodLineMarkerProvider : LineMarkerProvider {
         val className = element.containingClass?.name
         val methodName = element.name
 
-        val tooltipText = if (approvedFile != null)
-            "View approved file: ${approvedFile.name}"
-        else
-            "Approved file not found: $className.$methodName.approved.txt"
-
         return object : LineMarkerInfo<PsiElement>(
             element.nameIdentifier ?: element,
             (element.nameIdentifier ?: element).textRange,
             Icons.ApprovedIcon,
-            { tooltipText },
-            { event, elt ->
-                if (approvedFile != null) {
-                    showFileContentPopup(approvedFile, event)
-                } else {
-                    showNotification(elt.project, tooltipText)
-                }
-            },
-            GutterIconRenderer.Alignment.RIGHT
+            { createHoverHandler(approvedFile) },
+            { event, _ -> handleClick(event, approvedFile, element.project) },
+            GutterIconRenderer.Alignment.RIGHT,
+            { "View approved file" }
         ) {}
     }
 
-    private fun showFileContentPopup(virtualFile: com.intellij.openapi.vfs.VirtualFile, mouseEvent: MouseEvent) {
-        val document = FileDocumentManager.getInstance().getDocument(virtualFile)
-        if (document != null) {
-            val editorFactory = EditorFactory.getInstance()
-            val editor = editorFactory.createEditor(document)
-
-            val panel = JPanel(BorderLayout())
-            panel.add(JBScrollPane(editor.component), BorderLayout.CENTER)
-
-            JBPopupFactory.getInstance()
-                .createComponentPopupBuilder(panel, editor.component)
-                .setProject(editor.project)
-                .setTitle(virtualFile.name)
-                .setMovable(true)
-                .setResizable(true)
-                .setMinSize(Dimension(400, 200))
-                .createPopup()
-                .show(RelativePoint(mouseEvent))
+    private fun createHoverHandler(approvedFile: com.intellij.openapi.vfs.VirtualFile?): String {
+        return if (approvedFile != null) {
+            try {
+                FileDocumentManager.getInstance().getDocument(approvedFile)?.text ?: "Unable to read file content"
+            } catch (e: Exception) {
+                "Error reading file: ${e.message}"
+            }
+        } else {
+            "Approved file not found"
         }
+    }
+
+    private fun handleClick(
+        event: MouseEvent,
+        approvedFile: com.intellij.openapi.vfs.VirtualFile?,
+        project: Project
+    ): Boolean {
+        if (approvedFile != null) {
+            OpenFileDescriptor(project, approvedFile).navigate(true)
+        } else {
+            showNotification(project, "Approved file not found")
+        }
+        return true
     }
 
     private fun showNotification(project: Project, content: String) {
