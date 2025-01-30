@@ -1,53 +1,80 @@
 package pe.msbaek.approvedfilesplugin
 
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
+import com.intellij.codeInsight.daemon.LineMarkerInfo
+import com.intellij.codeInsight.daemon.LineMarkerProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
-import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiManager
+import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.ui.awt.RelativePoint
+import java.awt.event.MouseEvent
+import java.awt.Dimension
+import javax.swing.JPanel
+import java.awt.BorderLayout
+import com.intellij.ui.components.JBScrollPane
+import com.intellij.openapi.editor.markup.GutterIconRenderer
 
-class TestMethodLineMarkerProvider : RelatedItemLineMarkerProvider() {
-    override fun collectNavigationMarkers(
-        element: PsiElement,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
-    ) {
+class TestMethodLineMarkerProvider : LineMarkerProvider {
+    override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
         if (element !is PsiMethod) {
-            return
+            return null
         }
 
-        element.modifierList.annotations.forEach { annotation ->
-            if (annotation.qualifiedName == "org.junit.jupiter.api.Test") {
-                val approvedFile = ApprovedFileFinder.findApprovedFile(element)
-                val className = element.containingClass?.name
-                val methodName = element.name
+        val hasTestAnnotation = element.modifierList.annotations.any {
+            it.qualifiedName == "org.junit.jupiter.api.Test"
+        }
 
-                val tooltipText = if (approvedFile != null)
-                    "View approved file: ${approvedFile.name}"
-                else
-                    "Approved file not found: $className.$methodName.approved.txt"
+        if (!hasTestAnnotation) {
+            return null
+        }
 
-                val builder = NavigationGutterIconBuilder.create(Icons.ApprovedIcon)
-                    .setTooltipText(tooltipText)
+        val approvedFile = ApprovedFileFinder.findApprovedFile(element)
+        val className = element.containingClass?.name
+        val methodName = element.name
 
+        val tooltipText = if (approvedFile != null)
+            "View approved file: ${approvedFile.name}"
+        else
+            "Approved file not found: $className.$methodName.approved.txt"
+
+        return object : LineMarkerInfo<PsiElement>(
+            element.nameIdentifier ?: element,
+            (element.nameIdentifier ?: element).textRange,
+            Icons.ApprovedIcon,
+            { tooltipText },
+            { event, elt ->
                 if (approvedFile != null) {
-                    val psiFile = PsiManager.getInstance(element.project).findFile(approvedFile)
-                    if (psiFile != null) {
-                        builder.setTarget(psiFile)
-                    }
+                    showFileContentPopup(approvedFile, event)
+                } else {
+                    showNotification(elt.project, tooltipText)
                 }
+            },
+            GutterIconRenderer.Alignment.RIGHT
+        ) {}
+    }
 
-                val markerInfo = builder.createLineMarkerInfo(element.nameIdentifier ?: element)
+    private fun showFileContentPopup(virtualFile: com.intellij.openapi.vfs.VirtualFile, mouseEvent: MouseEvent) {
+        val document = FileDocumentManager.getInstance().getDocument(virtualFile)
+        if (document != null) {
+            val editorFactory = EditorFactory.getInstance()
+            val editor = editorFactory.createEditor(document)
 
-                if (approvedFile == null) {
-                    showNotification(element.project, tooltipText)
-                }
+            val panel = JPanel(BorderLayout())
+            panel.add(JBScrollPane(editor.component), BorderLayout.CENTER)
 
-                result.add(markerInfo)
-            }
+            JBPopupFactory.getInstance()
+                .createComponentPopupBuilder(panel, editor.component)
+                .setProject(editor.project)
+                .setTitle(virtualFile.name)
+                .setMovable(true)
+                .setResizable(true)
+                .setMinSize(Dimension(400, 200))
+                .createPopup()
+                .show(RelativePoint(mouseEvent))
         }
     }
 
