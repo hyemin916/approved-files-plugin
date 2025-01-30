@@ -7,17 +7,41 @@
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
     <name>Approved-files-plugin</name>
     <version>1.0.0</version>
+    <vendor>msbaek</vendor>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="codetemplate@hanmail.net" url="https://linktr.ee/codetemplate">Myeongseok Baek</vendor>
 
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+        <h2>Approvaltests xxx.approved.txt Viewer</h2>
+        <p>Enhances test file navigation by providing quick access to approval test files.</p>
+
+        <h3>Key Features</h3>
+        <ul>
+            <li><b>Smart Test Detection:</b> Automatically identifies methods with @Test annotations</li>
+            <li><b>Quick Preview:</b> Hover over the icon to preview the approved file content without leaving your test</li>
+            <li><b>Direct Navigation:</b> Click the icon to open the corresponding approved file</li>
+            <li><b>Visual Feedback:</b> Clear notifications when approved files are missing</li>
+        </ul>
+
+        <h3>How It Works</h3>
+        <p>The plugin adds a colored bar icon next to each @Test method. This icon serves two purposes:</p>
+        <ol>
+            <li><b>Hover:</b> Shows a quick preview of the approved file content</li>
+            <li><b>Click:</b> Opens the approved file in the editor</li>
+        </ol>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <h4>Version 1.0.0</h4>
+        <ul>
+            <li>Initial release</li>
+            <li>Support for @Test method detection</li>
+            <li>Quick preview on hover</li>
+            <li>Direct file navigation on click</li>
+            <li>Missing file notifications</li>
+        </ul>
+    ]]></change-notes>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
