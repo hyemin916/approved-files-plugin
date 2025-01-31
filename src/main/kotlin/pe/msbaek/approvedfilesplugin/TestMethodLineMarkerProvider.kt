@@ -27,8 +27,8 @@ class TestMethodLineMarkerProvider : LineMarkerProvider {
         }
 
         val approvedFile = ApprovedFileFinder.findApprovedFile(element)
-        val className = element.containingClass?.name
-        val methodName = element.name
+//        val className = element.containingClass?.name
+//        val methodName = element.name
 
         return object : LineMarkerInfo<PsiElement>(
             element.nameIdentifier ?: element,

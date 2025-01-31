@@ -1,7 +1,6 @@
 package pe.msbaek.approvedfilesplugin
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiFile
 
 class ApprovedFileFinder {
     companion object {
