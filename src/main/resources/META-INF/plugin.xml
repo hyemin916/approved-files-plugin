@@ -14,8 +14,8 @@
 
     <description><![CDATA[
         <h2>Approvaltests xxx.approved.txt Viewer</h2>
-        <p>Enhances test file navigation by providing quick access to approvaltests xxx.approved.txt files.</p>
-        <p>Please visit <a href="https://approvaltests.com/">Approval Tests</a> for more information about Approval Tests.</p>
+        <p>Enhances test file navigation by providing quick access to TestClassName.methodName.approved.txt files from ApprovalTests.</p>
+        <p>When working with <a href="https://approvaltests.com/">Approval Tests</a>, checking test results in approved.txt files can be cumbersome. This plugin streamlines the process by adding interactive icons next to @Test methods.</p>
 
         <h3>Key Features</h3>
         <ul>
@@ -25,12 +25,13 @@
             <li><b>Visual Feedback:</b> Clear notifications when approved files are missing</li>
         </ul>
 
-        <h3>How It Works</h3>
-        <p>The plugin adds a colored bar icon next to each @Test method. This icon serves two purposes:</p>
-        <ol>
-            <li><b>Hover:</b> Shows a quick preview of the approved file content</li>
+        <h3>Usage</h3>
+        <p>Look for the colored bar icon next to each @Test method:</p>
+        <ul>
+            <li><b>Mouse Hover:</b> Shows a quick preview of the approved file content</li>
             <li><b>Click:</b> Opens the approved file in the editor</li>
-        </ol>
+        </ul>
+
     ]]></description>
 
     <change-notes><![CDATA[
