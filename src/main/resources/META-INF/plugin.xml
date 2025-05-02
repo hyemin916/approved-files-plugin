@@ -1,11 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>pe.msbaek.approved-files-plugin</id>
+    <id>pe.msbaek.approved-files</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Approved-files-plugin</name>
+    <name>Approved-files</name>
     <version>1.0.0</version>
     <vendor>msbaek</vendor>
 

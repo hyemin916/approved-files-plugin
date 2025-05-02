@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "approved-files-plugin"
+rootProject.name = "approved-files"
