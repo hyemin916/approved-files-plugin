@@ -1,0 +1,23 @@
+<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+<!-- Dark Background -->
+<rect width="40" height="40" fill="#2B2B2B" rx="4"/>
+
+<!-- Green approved document (left) -->
+<rect x="6" y="7" width="11" height="26" fill="#3FB950" rx="2"/>
+<rect x="7" y="13" width="9" height="2" fill="#2EA043" rx="1"/>
+<rect x="7" y="18" width="9" height="2" fill="#2EA043" rx="1"/>
+<rect x="7" y="23" width="9" height="2" fill="#2EA043" rx="1"/>
+
+<!-- Orange pending document (right) -->
+<rect x="18" y="7" width="11" height="26" fill="#F78166" rx="2"/>
+<rect x="19" y="13" width="9" height="2" fill="#E2641E" rx="1"/>
+<rect x="19" y="18" width="9" height="2" fill="#E2641E" rx="1"/>
+<rect x="19" y="23" width="9" height="2" fill="#E2641E" rx="1"/>
+
+<!-- Checkmark on green document -->
+<path d="M9 28 l3 3 l5 -5"
+      stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+<!-- Question mark on orange document -->
+<text x="23.5" y="31" font-family="sans-serif" font-size="10" fill="#FFFFFF" font-weight="bold">?</text>
+</svg>
