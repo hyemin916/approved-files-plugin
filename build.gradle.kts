@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "pe.msbaek"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     mavenCentral()
@@ -42,7 +42,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("231")
-        untilBuild.set("261.*")
+        untilBuild.set("241.*")
     }
 
     signPlugin {
